@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>No Bi Ta'z MULTI VIEW-LOADER</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background-color: #000;
+      color: #00ff00;
+      font-family: 'Courier New', Courier, monospace;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      padding: 20px;
+      font-size: 36px;
+      text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
+      animation: flicker 1.5s infinite alternate;
+    }
+
+    @keyframes flicker {
+      from {
+        opacity: 1;
+        text-shadow: 0 0 5px #0f0, 0 0 10px #0f0;
+      }
+      to {
+        opacity: 0.6;
+        text-shadow: 0 0 2px #0f0, 0 0 4px #0f0;
+      }
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      text-align: center;
+      padding: 20px;
+    }
+
+    input, select, button {
+      background-color: black;
+      border: 1px solid #00ff00;
+      color: #00ff00;
+      padding: 10px;
+      margin: 5px;
+      font-size: 16px;
+      border-radius: 5px;
+      font-family: 'Courier New', monospace;
+    }
+
+    button:hover {
+      background-color: #00ff00;
+      color: black;
+      box-shadow: 0 0 10px #00ff00;
+      cursor: pointer;
+    }
+
+    .iframe-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    iframe {
+      border: 2px solid #0f0;
+      box-shadow: 0 0 10px #0f0;
+      border-radius: 8px;
+    }
+
+    .loading {
+      font-size: 18px;
+      margin-top: 10px;
+      display: none;
+      color: #0f0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>No Bi Ta'z MULTI VIEW-LOADER</h1>
+<h2> Developed by TawHid_NoBiTa <h2>
+
+  <div class="container">
+    <input type="text" id="urlInput" placeholder="Paste your URL here">
+    <input type="number" id="countInput" value="10" min="1" max="500" placeholder="View count">
+    <select id="sizeSelect">
+      <option value="small">Small</option>
+      <option value="medium" selected>Medium</option>
+      <option value="large">Large</option>
+    </select>
+    <br>
+    <button onclick="loadIframes()">LOAD VIEWS</button>
+    <button onclick="clearIframes()">CLEAR ALL</button>
+
+    <div class="loading" id="loadingText">Loading views... Please wait</div>
+
+    <div class="iframe-container" id="iframes"></div>
+  </div>
+
+  <script>
+    function getIframeSize(size) {
+      switch(size) {
+        case 'small': return { width: 200, height: 120 };
+        case 'medium': return { width: 320, height: 200 };
+        case 'large': return { width: 450, height: 300 };
+        default: return { width: 320, height: 200 };
+      }
+    }
+
+    async function loadIframes() {
+      const url = document.getElementById('urlInput').value.trim();
+      const count = parseInt(document.getElementById('countInput').value);
+      const size = document.getElementById('sizeSelect').value;
+      const container = document.getElementById('iframes');
+      const loadingText = document.getElementById('loadingText');
+
+      if (!url || isNaN(count) || count < 1) {
+        alert("Enter a valid URL and view count.");
+        return;
+      }
+
+      container.innerHTML = '';
+      loadingText.style.display = 'block';
+
+      const { width, height } = getIframeSize(size);
+      let loaded = 0;
+      const batchSize = 10;
+
+      while (loaded < count) {
+        const toLoad = Math.min(batchSize, count - loaded);
+        for (let i = 0; i < toLoad; i++) {
+          const iframe = document.createElement('iframe');
+          iframe.src = url;
+          iframe.width = width;
+          iframe.height = height;
+          container.appendChild(iframe);
+        }
+        loaded += toLoad;
+        await new Promise(resolve => setTimeout(resolve, 1000)); // wait 1 second between batches
+      }
+
+      loadingText.style.display = 'none';
+    }
+
+    function clearIframes() {
+      document.getElementById('iframes').innerHTML = '';
+    }
+  </script>
+
+</body>
+</html>
