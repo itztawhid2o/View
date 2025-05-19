@@ -124,6 +124,30 @@
 <div class="rotating-png">
   <img src="https://i.pinimg.com/736x/b7/0e/e7/b70ee7c72a4ea653664eeba1dd8abfb9.jpg">
 </div>
+  <audio id="musicPlayer" autoplay></audio>
+
+<script>
+  const playlist = [
+    "https://pagalfree.com/musics/128-Tere%20Bin%20Nahin%20Lagda%20-%20Its%20A%20Wonderful%20Afterlife%20128%20Kbps.mp3",
+    "https://pagalfree.com/musics/128-440%20Volt%20-%20Sultan%20128%20Kbps.mp3"
+  ];
+
+  let current = 0;
+  const player = document.getElementById("musicPlayer");
+
+  function playNext() {
+    player.src = playlist[current];
+    player.play();
+  }
+
+  player.addEventListener("ended", () => {
+    current = (current + 1) % playlist.length;
+    playNext();
+  });
+
+  // Start playing on page load
+  window.addEventListener("load", playNext);
+</script>
 
   <h1>No Bi Ta'z MULTI VIEW-LOADER</h1>
 <h2> Developed by TawHid_NoBiTa <h2>
